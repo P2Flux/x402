@@ -7,6 +7,8 @@ Checklist for authoring a new per-network scheme spec file (`scheme_<name>_<chai
 - Scheme-specific information (e.g. in `PaymentRequired`) goes in `extra`, not in `extensions` or at the top level.
 - Define any scheme-specific `extra` fields (optional/required, with description), and show them in `PaymentRequired`, `PaymentPayload`, and `SettlementResponse` messages or `supported/` examples.
 - Every field placed in `PaymentRequired.extra` must be consumed by the client to construct the payment or by the facilitator to verify or settle it; do not include human-readable or otherwise purely informational fields.
+- Define one canonical payload path where possible. If the profile supports multiple transfer methods, advertise an explicit selector, define defaults, and state how server requirements, facilitator capabilities, and client payloads remain consistent. Downstream parties may narrow an advertised capability set but MUST NOT widen it.
+- Specify canonical network and asset identifiers, atomic units, account/address/key formats, exact signed or serialized bytes, and malformed-input behavior. Never rely on server-provided token decimals or symbols for an amount the client authorizes.
 
 ## Compliance and conventions
 
@@ -21,6 +23,7 @@ Checklist for authoring a new per-network scheme spec file (`scheme_<name>_<chai
 ## Statelessness
 
 - Stateless design is strongly preferred for client and server, and especially the facilitator. A short-lived cache is acceptable but needs to be well justified (see the duplicate-settlement mitigation in [`scheme_exact_svm.md`](../../../../specs/schemes/exact/scheme_exact_svm.md#duplicate-settlement-mitigation-recommended)). Persistent storage warrants discussion with maintainers.
+- For every cache or state store, specify its owner, key, retention, behavior across replicas, and behavior for in-flight duplicates, settled duplicates, temporary failures, and intentionally multi-use authorizations. Ledger deduplication alone does not prevent duplicate resource access.
 
 ## Nonces
 
@@ -33,6 +36,7 @@ Checklist for authoring a new per-network scheme spec file (`scheme_<name>_<chai
 - Verify should provide the strongest possible guarantee that settlement will succeed. If settle fails, the client does NOT get access to the resource; but if verify succeeded, the server did unnecessary work, wasting resources (compute). This is a server protection.
 - The facilitator must confirm transaction success onchain before returning success to the server.
 - The facilitator must protect its own funds and bound its fee exposure. Its signature must authorize only the network fee: the facilitator must not appear as the authority, source, or sender of any value-moving instruction (fee-payer isolation), so it cannot be induced to transfer its own funds. It must also cap the fees it pays against client-controlled parameters (e.g. explicit gas limits, compute-unit and priority-fee caps), so a client cannot inflate them.
+- For delegated or opaque execution, simulation alone is insufficient. Define executor admission/allowlists, resource caps, simulation scope, settlement-time rechecks, and observable outcome assertions (such as net asset movement). State any upgrade or administrator trust assumption.
 
 ## Trust model
 

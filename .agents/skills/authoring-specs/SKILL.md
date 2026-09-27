@@ -30,5 +30,16 @@ These apply to every spec type (scheme, extension). The references below add typ
 
 ## References
 
-- New network scheme spec (`scheme_<name>_<chain>.md`): see [references/new-network-scheme-spec.md](references/new-network-scheme-spec.md).
-- New extension spec: to be added.
+Select the narrowest reference that applies, then apply the general rules above:
+
+- New core protocol behavior or shared types: [references/core-spec-change.md](references/core-spec-change.md).
+- New scheme family overview (`scheme_<name>.md`): [references/new-scheme-overview-spec.md](references/new-scheme-overview-spec.md).
+- New per-network scheme (`scheme_<name>_<chain>.md`): [references/new-network-scheme-spec.md](references/new-network-scheme-spec.md).
+- New extension: [references/new-extension-spec.md](references/new-extension-spec.md).
+- New transport: [references/new-transport-spec.md](references/new-transport-spec.md).
+- Amendment to an existing spec: [references/updating-an-existing-spec.md](references/updating-an-existing-spec.md).
+
+Write the spec before its implementation. For a new network, begin with a spec-only
+PR; do not encode SDK details or a particular transport into a normative scheme.
+Use [specs/CONTRIBUTING.md](../../../specs/CONTRIBUTING.md) for file placement and
+the matching template.
