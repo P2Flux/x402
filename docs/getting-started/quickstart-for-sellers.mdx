@@ -1151,6 +1151,27 @@ Change from testnet to mainnet network identifiers:
     // For Solana, use a Solana wallet address (base58 format)
     payTo: "YourSolanaWalletAddress",
     ```
+
+    **Browser paywall on Solana mainnet**
+
+    The Solana public mainnet RPC (`https://api.mainnet-beta.solana.com`) returns 403 for browser requests. If you are serving a browser paywall on Solana mainnet, configure `rpcUrls` with a browser-safe endpoint when building your paywall:
+
+    ```typescript
+    import { createPaywall } from '@x402/paywall';
+    import { svmPaywall } from '@x402/paywall/svm';
+
+    const paywall = createPaywall()
+      .withNetwork(svmPaywall)
+      .withConfig({
+        testnet: false,
+        rpcUrls: {
+          'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp': 'https://your-rpc.example.com',
+        },
+      })
+      .build();
+    ```
+
+    The RPC URL is embedded in the paywall HTML and visible to every visitor. Use an origin-restricted key or your own RPC proxy — never a secret API key.
   </Tab>
   <Tab title="Multi-Network">
     ```typescript
